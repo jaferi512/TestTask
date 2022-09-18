@@ -10,13 +10,16 @@ import {
   ItemDetails,
 } from '../activities';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+// Import Custom Sidebar
+import CustomSidebarMenu from './CustomSidebarMenu';
 const Drawer = createDrawerNavigator();
 function MyDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
         swipeEdgeWidth: 0,
-      }}>
+      }}
+      drawerContent={(props) => <CustomSidebarMenu {...props} />}>
       <Drawer.Screen name="Home" component={MyTabs} />
       <Drawer.Screen name="Favorites" component={Favourites} />
     </Drawer.Navigator>

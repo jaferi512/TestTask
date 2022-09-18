@@ -170,11 +170,13 @@ const styles = StyleSheet.create({
   left_txt: {
     width: '30%',
     textAlign: 'center',
+    color: '#000000',
   },
   right_txt: {
     width: '60%',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#000000',
   },
 });

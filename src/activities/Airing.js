@@ -36,12 +36,14 @@ const Airing = ({navigation}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       // The screen is focused
       // Call any action
-      dispatch(getanime({page: 0, limit: 25}));
+      dispatch(
+        getanime({page: page?.current_page, limit: page?.items.per_page}),
+      );
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, page]);
   return (
     <View style={styles.main_contain}>
       <View style={styles.input_contain}>
@@ -49,6 +51,8 @@ const Airing = ({navigation}) => {
           value={searchTerm}
           onChangeText={setSearchTerm}
           placeholder="Enter To Search"
+          placeholderTextColor={'#000000'}
+          style={styles.gen_text}
         />
       </View>
       {loading ? (
@@ -99,7 +103,7 @@ const Airing = ({navigation}) => {
                   <TouchableOpacity
                     onPress={() => HandlePrevious()}
                     style={styles.prev_contain}>
-                    <Text>Previous</Text>
+                    <Text style={styles.gen_text}>Previous</Text>
                   </TouchableOpacity>
                 )}
                 <Text style={styles.page}>{page?.current_page}</Text>
@@ -107,7 +111,7 @@ const Airing = ({navigation}) => {
                   <TouchableOpacity
                     onPress={() => HandleNext()}
                     style={styles.prev_contain}>
-                    <Text>Next</Text>
+                    <Text style={styles.gen_text}>Next</Text>
                   </TouchableOpacity>
                 ) : (
                   <View style={styles.prev_contain2} />
@@ -175,5 +179,9 @@ const styles = StyleSheet.create({
   },
   page: {
     fontWeight: 'bold',
+    color: '#000000',
+  },
+  gen_text: {
+    color: '#000000',
   },
 });

@@ -4,7 +4,7 @@ import React from 'react';
 const EmptyList = () => {
   return (
     <View style={styles.container}>
-      <Text>Empty List</Text>
+      <Text style={styles.gen_text}>Empty List</Text>
     </View>
   );
 };
@@ -16,5 +16,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  gen_text: {
+    color: '#000000',
   },
 });

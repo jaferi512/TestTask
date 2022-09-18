@@ -19,7 +19,7 @@ const FavouriteCard = ({navigation, item, onpress}) => {
       </View>
       <View style={styles.right_container}>
         <View style={styles.general_contain1}>
-          <Text style={styles.title_contain}>
+          <Text numberOfLines={2} style={styles.title_contain}>
             {item.item.title ? item.item.title : 'Not Present'}
           </Text>
           <Text style={styles.rating_contain}>
@@ -27,8 +27,12 @@ const FavouriteCard = ({navigation, item, onpress}) => {
           </Text>
         </View>
         <View style={styles.general_contain2}>
-          <Text>{item.item.score ? item.item.score : 'Not Present'}</Text>
-          <Text>{item.item.year ? item.item.year : 'Not Present'}</Text>
+          <Text style={styles.gen_text}>
+            {item.item.score ? item.item.score : 'Not Present'}
+          </Text>
+          <Text style={styles.gen_text}>
+            {item.item.year ? item.item.year : 'Not Present'}
+          </Text>
         </View>
         <TouchableOpacity onPress={onpress} style={styles.btn_contain}>
           <Text style={styles.btn_txt}>Remove From Favorites</Text>
@@ -43,7 +47,8 @@ export {FavouriteCard};
 const styles = StyleSheet.create({
   container: {
     width: '95%',
-    height: 120,
+    minHeight: 120,
+    maxHeight: 180,
     flexDirection: 'row',
     alignSelf: 'center',
     backgroundColor: 'white',
@@ -74,7 +79,8 @@ const styles = StyleSheet.create({
   },
   right_container: {
     width: '65%',
-    height: 110,
+    minHeight: 120,
+    maxHeight: 180,
     alignItems: 'center',
     justifyContent: 'space-around',
   },
@@ -88,10 +94,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
+    color: '#000000',
   },
   rating_contain: {
     width: '50%',
     textAlign: 'center',
+    color: '#000000',
   },
   general_contain2: {
     width: '100%',
@@ -109,5 +117,8 @@ const styles = StyleSheet.create({
   btn_txt: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  gen_text: {
+    color: '#000000',
   },
 });
