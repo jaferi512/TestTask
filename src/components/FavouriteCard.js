@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 
-const AnimeCard = ({navigation, item}) => {
+const FavouriteCard = ({navigation, item, onpress}) => {
   return (
     <TouchableOpacity
       onPress={() =>
@@ -30,12 +30,15 @@ const AnimeCard = ({navigation, item}) => {
           <Text>{item.item.score ? item.item.score : 'Not Present'}</Text>
           <Text>{item.item.year ? item.item.year : 'Not Present'}</Text>
         </View>
+        <TouchableOpacity onPress={onpress} style={styles.btn_contain}>
+          <Text style={styles.btn_txt}>Remove From Favorites</Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
 };
 
-export {AnimeCard};
+export {FavouriteCard};
 
 const styles = StyleSheet.create({
   container: {
@@ -94,5 +97,17 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  btn_contain: {
+    width: '80%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'red',
+    borderRadius: 10,
+  },
+  btn_txt: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

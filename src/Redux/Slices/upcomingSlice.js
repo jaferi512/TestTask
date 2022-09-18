@@ -4,7 +4,7 @@ import apiConfig from '../../api/apiConfig';
 export const getanime = createAsyncThunk('anime', async data => {
   try {
     const response = await apiConfig.get(
-      '/anime?page=' + data.page + '&limit=' + data.limit + '&status=airing',
+      '/anime?page=' + data.page + '&limit=' + data.limit + '&status=upcoming',
     );
     if (response.status === 200) {
       return {
@@ -21,30 +21,10 @@ export const getanime = createAsyncThunk('anime', async data => {
   }
 });
 
-export const getanimeDetails = createAsyncThunk('animeDetails', async id => {
-  //make api request to login with that username and password
-  try {
-    //if Login , modify our state, and say that we are authenticated
-    const response = await apiConfig.get('/anime/' + id);
-    if (response.status === 200) {
-      //console.log(JSON.stringify(response.data.data));
-      return {
-        details: response.data.data,
-        error: '',
-      };
-    } else {
-      return {data: undefined, error: response.statusText};
-    }
-  } catch (err) {
-    return {token: '', error: err.message};
-  }
-});
-
 const initialState = {
   data: [],
   loading: false,
   filteredUsers: [],
-  details: {},
   error: '',
   pagination: {
     last_visible_page: 0,
@@ -58,8 +38,8 @@ const initialState = {
   },
 };
 
-export const airingReducer = createSlice({
-  name: 'airing',
+export const upcomingReducer = createSlice({
+  name: 'upcoming',
   initialState,
   reducers: {
     searchByName: (state, action) => {
@@ -98,29 +78,7 @@ export const airingReducer = createSlice({
       // Add user to the state array
       state.loading = false;
     });
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getanimeDetails.fulfilled, (state, action) => {
-      state.loading = false;
-      // Add user to the state array
-      if (action.payload.error) {
-        state.error = action.payload.error;
-      } else {
-        state.error = '';
-        state.details = action.payload.details;
-      }
-    });
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getanimeDetails.pending, state => {
-      // Add user to the state array
-      state.error = '';
-      state.loading = true;
-    });
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getanimeDetails.rejected, (state, action) => {
-      // Add user to the state array
-      state.loading = false;
-    });
   },
 });
-export const {searchByName} = airingReducer.actions;
-export default airingReducer.reducer;
+export const {searchByName} = upcomingReducer.actions;
+export default upcomingReducer.reducer;

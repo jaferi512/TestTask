@@ -8,9 +8,8 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {getanime} from '../Redux/Slices/airingSlice';
+import {getanime, searchByName} from '../Redux/Slices/airingSlice';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {searchByName} from '../Redux/Slices/airingSlice';
 import {EmptyList, AnimeCard} from '../components';
 const Airing = ({navigation}) => {
   const loading = useSelector(state => state.airing.loading);
@@ -44,22 +43,8 @@ const Airing = ({navigation}) => {
     return unsubscribe;
   }, [navigation]);
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#D3D3D3',
-      }}>
-      <View
-        style={{
-          width: '80%',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          backgroundColor: 'white',
-          marginTop: 5,
-          alignSelf: 'center',
-          borderRadius: 10,
-        }}>
+    <View style={styles.main_contain}>
+      <View style={styles.input_contain}>
         <TextInput
           value={searchTerm}
           onChangeText={setSearchTerm}
@@ -101,60 +86,31 @@ const Airing = ({navigation}) => {
           },
         )
       ) : (
-        <View style={{flex: 1}}>
+        <View style={styles.list_contain}>
           <FlatList
-            contentContainerStyle={{flexGrow: 1}}
+            contentContainerStyle={styles.flatlist}
             ListEmptyComponent={() => <EmptyList />}
             //data={data.filter(val => val.airing)}
             ListFooterComponent={() => (
-              <View
-                style={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  marginTop: 8,
-                  padding: 5,
-                }}>
+              <View style={styles.pagination_contain}>
                 {page?.current_page === 1 ? (
-                  <View
-                    style={{
-                      width: '30%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: 5,
-                      padding: 5,
-                    }}
-                  />
+                  <View style={styles.prev_contain2} />
                 ) : (
                   <TouchableOpacity
                     onPress={() => HandlePrevious()}
-                    style={{
-                      width: '30%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: 'lightgreen',
-                      borderRadius: 5,
-                      padding: 5,
-                    }}>
+                    style={styles.prev_contain}>
                     <Text>Previous</Text>
                   </TouchableOpacity>
                 )}
-                <Text style={{fontWeight: 'bold'}}>{page?.current_page}</Text>
-                {page?.has_next_page && (
+                <Text style={styles.page}>{page?.current_page}</Text>
+                {page?.has_next_page ? (
                   <TouchableOpacity
                     onPress={() => HandleNext()}
-                    style={{
-                      width: '30%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: 'lightgreen',
-                      borderRadius: 5,
-                      padding: 5,
-                    }}>
+                    style={styles.prev_contain}>
                     <Text>Next</Text>
                   </TouchableOpacity>
+                ) : (
+                  <View style={styles.prev_contain2} />
                 )}
               </View>
             )}
@@ -172,4 +128,52 @@ const Airing = ({navigation}) => {
 
 export {Airing};
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  main_contain: {
+    flex: 1,
+    backgroundColor: '#D3D3D3',
+  },
+  input_contain: {
+    width: '80%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    marginTop: 5,
+    alignSelf: 'center',
+    borderRadius: 10,
+  },
+  list_contain: {
+    flex: 1,
+  },
+  flatlist: {
+    flexGrow: 1,
+  },
+  pagination_contain: {
+    width: '95%',
+    alignSelf: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 8,
+    padding: 5,
+  },
+  prev_contain: {
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lightgreen',
+    borderRadius: 5,
+    padding: 5,
+  },
+  prev_contain2: {
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    padding: 5,
+  },
+  page: {
+    fontWeight: 'bold',
+  },
+});

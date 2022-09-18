@@ -18,7 +18,7 @@ function MyDrawer() {
         swipeEdgeWidth: 0,
       }}>
       <Drawer.Screen name="Home" component={MyTabs} />
-      <Drawer.Screen name="Favourites" component={Favourites} />
+      <Drawer.Screen name="Favorites" component={Favourites} />
     </Drawer.Navigator>
   );
 }

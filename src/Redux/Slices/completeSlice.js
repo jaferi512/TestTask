@@ -1,29 +1,12 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import apiConfig from '../../api/apiConfig';
-//import {setAsyncStorage, clearAsyncStorage} from '../../helpers/asyncStorage';
 
-// First, create the thunk
 export const getanime = createAsyncThunk('anime', async data => {
-  //make api request to login with that username and password
   try {
-    //if Login , modify our state, and say that we are authenticated
     const response = await apiConfig.get(
-      '/anime?page=' + data.page + '&limit=' + data.limit,
+      '/anime?page=' + data.page + '&limit=' + data.limit + '&status=complete',
     );
-    //console.log(response.headers.access_token);
     if (response.status === 200) {
-      //console.log(JSON.stringify(response.data.data));
-      // Get the device token
-      /* await setAsyncStorage('token', response.headers.access_token);
-      await setAsyncStorage(
-        'x-working-company',
-        response.headers['x-working-company'],
-      );
-      await setAsyncStorage(
-        'x-working-branch',
-        response.headers['x-working-branch'],
-      );
-      await setAsyncStorage('x-user-role', response.headers['x-user-role']); */
       return {
         data: response.data.data,
         error: '',
@@ -34,8 +17,6 @@ export const getanime = createAsyncThunk('anime', async data => {
       return {data: undefined, error: response.statusText};
     }
   } catch (err) {
-    //if Login fails, then show error message
-    //console.log(err.message);
     return {token: '', error: err.message};
   }
 });
@@ -68,9 +49,7 @@ export const completeReducer = createSlice({
       return {
         ...state,
         filteredUsers:
-          action.payload.length > 0
-            ? filteredUsers.filter(val => val.status === 'Finished Airing')
-            : [...state.data.filter(val => val.status === 'Finished Airing')],
+          action.payload.length > 0 ? filteredUsers : [...state.data],
       };
     },
   },
@@ -84,9 +63,7 @@ export const completeReducer = createSlice({
       } else {
         state.error = '';
         state.data = action.payload.data;
-        state.filteredUsers = action.payload.data.filter(
-          val => val.status === 'Finished Airing',
-        );
+        state.filteredUsers = action.payload.data;
         state.pagination = action.payload.page;
       }
     });

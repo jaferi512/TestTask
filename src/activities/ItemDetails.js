@@ -18,7 +18,6 @@ const ItemDetails = ({route, navigation}) => {
   const details = useSelector(state => state.airing.details);
   const loading = useSelector(state => state.airing.loading);
   const data = useSelector(state => state.favourite.data);
-  console.log(JSON.stringify(details));
 
   const addTo = ok => {
     if (data.some(e => e.mal_id === details.mal_id)) {
@@ -31,193 +30,66 @@ const ItemDetails = ({route, navigation}) => {
     dispatch(getanimeDetails(itemId));
   }, []);
   return (
-    <View style={{flex: 1, alignItems: 'center'}}>
-      <View style={{width: '100%', height: 300, overflow: 'hidden'}}>
+    <View style={styles.main_contain}>
+      <View style={styles.top_contain}>
         <Image
-          style={{
-            height: 280,
-            width: '100%',
-            borderBottomLeftRadius: 50,
-            borderBottomRightRadius: 50,
-          }}
+          style={styles.img}
           resizeMode={'contain'}
           source={{uri: details && details.images?.jpg.image_url}}
         />
-        <TouchableOpacity onPress={() => navigation.goBack()}
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            backgroundColor: 'white',
-            height:40,
-            width:40,
-            borderRadius: 40 /2,
-            justifyContent:'center',
-            alignItems:'center'
-          }}>
-          {/* <Text style={{fontSize:20, fontWeight:'bold'}}>x</Text> */}
-          <Icon name='arrow-back' size={25} color={'black'} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.back_contain}>
+          <Icon name="arrow-back" size={25} color={'black'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => addTo(details)}
-          style={{
-            position: 'absolute',
-            bottom: 40,
-            right: 20,
-            backgroundColor: 'white',
-            height: 50,
-            width: 50,
-            borderRadius: 50 /2,
-            justifyContent:'center',
-            alignItems:'center'
-          }}>
-            {data.some(e => e.mal_id === details.mal_id) ? (
-              <Icon2 name='heart-fill' size={25} color={'red'} />
-            ) : (
-              <Icon2 name='heart' size={25} color={'red'} />
-            )}
-          {/* <Image style={{height:35,width:35}} source={require('../assets/heart.png')} /> */}
+        <TouchableOpacity
+          onPress={() => addTo(details)}
+          style={styles.heart_contain}>
+          {data.some(e => e.mal_id === details.mal_id) ? (
+            <Icon2 name="heart-fill" size={25} color={'red'} />
+          ) : (
+            <Icon2 name="heart" size={25} color={'red'} />
+          )}
         </TouchableOpacity>
       </View>
-      <View style={{width: '95%', alignItems: 'center'}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Name:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            {details.title}
+      <View style={styles.bottom_contain}>
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Name:</Text>
+          <Text style={styles.right_txt}>
+            {details.title ? details.title : 'Not Present'}
           </Text>
         </View>
-      </View>
-      <View style={{width: '95%', alignItems: 'center'}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Rating:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            {details.rating}
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Rating:</Text>
+          <Text style={styles.right_txt}>
+            {details.rating ? details.rating : 'Not Present'}
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Score:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            {details.score}
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Score:</Text>
+          <Text style={styles.right_txt}>
+            {details.score ? details.score : 'Not Present'}
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Season:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            {details.season}
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Season:</Text>
+          <Text style={styles.right_txt}>
+            {details.season ? details.season : 'Not Present'}
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Episodes:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Episodes:</Text>
+          <Text style={styles.right_txt}>
             {details.episodes ? details.episodes : 'Not Present'}
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Duration:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            {details.duration}
-          </Text>
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Duration:</Text>
+          <Text style={styles.right_txt}>{details.duration}</Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-            marginTop: 10,
-          }}>
-          <Text style={{width: '30%', textAlign: 'center'}}>Year:</Text>
-          <Text
-            style={{
-              width: '60%',
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
+        <View style={styles.gen_contain}>
+          <Text style={styles.left_txt}>Year:</Text>
+          <Text style={styles.right_txt}>
             {details.year ? details.year : 'Not Present'}
           </Text>
         </View>
@@ -245,5 +117,64 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(52, 52, 52, 0.6)',
-  }
+  },
+  main_contain: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  top_contain: {
+    width: '100%',
+    height: 300,
+    overflow: 'hidden',
+  },
+  img: {
+    height: 280,
+    width: '100%',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  back_contain: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'white',
+    height: 40,
+    width: 40,
+    borderRadius: 40 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heart_contain: {
+    position: 'absolute',
+    bottom: 40,
+    right: 20,
+    backgroundColor: 'white',
+    height: 50,
+    width: 50,
+    borderRadius: 50 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottom_contain: {
+    width: '95%',
+    alignItems: 'center',
+  },
+  gen_contain: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: 5,
+    marginTop: 10,
+  },
+  left_txt: {
+    width: '30%',
+    textAlign: 'center',
+  },
+  right_txt: {
+    width: '60%',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
