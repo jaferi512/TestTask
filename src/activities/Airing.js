@@ -1,37 +1,86 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React, {useEffect} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {getanime} from '../Redux/Slices/airingSlice';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
+import {searchByName} from '../Redux/Slices/airingSlice';
+import {EmptyList, AnimeCard} from '../components';
 const Airing = ({navigation}) => {
-  const stat = useSelector(state => state.airing);
+  const loading = useSelector(state => state.airing.loading);
+  const data = useSelector(state => state.airing.filteredUsers);
+  const page = useSelector(state => state.airing.pagination);
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState('');
   useEffect(() => {
-    dispatch(getanime());
-  }, []);
+    dispatch(searchByName(searchTerm));
+  }, [searchTerm]);
+
+  const HandleNext = () => {
+    dispatch(
+      getanime({page: page.current_page + 1, limit: page.items.per_page}),
+    );
+  };
+  const HandlePrevious = () => {
+    dispatch(
+      getanime({page: page.current_page - 1, limit: page.items.per_page}),
+    );
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      dispatch(getanime({page: 0, limit: 25}));
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: '#D3D3D3',
-        justifyContent: 'center',
-        alignItems: 'center',
       }}>
-      <Text>Airing</Text>
-      {stat.loading
-        ? ['0', '1', '2', '3', '4'].map(function (ok, i) {
+      <View
+        style={{
+          width: '80%',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          backgroundColor: 'white',
+          marginTop: 5,
+          alignSelf: 'center',
+          borderRadius: 10,
+        }}>
+        <TextInput
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+          placeholder="Enter To Search"
+        />
+      </View>
+      {loading ? (
+        Array.from({length: 7}, () => Math.floor(Math.random() * 40)).map(
+          function (ok, i) {
             return (
-              <SkeletonPlaceholder>
+              <SkeletonPlaceholder key={i}>
                 <SkeletonPlaceholder.Item
                   flexDirection="row"
                   height={100}
-                  width={'90%'}
+                  width={'95%'}
+                  alignSelf={'center'}
                   alignItems="center">
                   <SkeletonPlaceholder.Item
                     width={60}
                     height={60}
-                    borderRadius={50}
+                    borderRadius={20}
                   />
                   <SkeletonPlaceholder.Item marginLeft={20}>
                     <SkeletonPlaceholder.Item
@@ -49,11 +98,74 @@ const Airing = ({navigation}) => {
                 </SkeletonPlaceholder.Item>
               </SkeletonPlaceholder>
             );
-          })
-        : null}
-      <TouchableOpacity onPress={() => navigation.navigate('detail')}>
-        <Text>To Complete</Text>
-      </TouchableOpacity>
+          },
+        )
+      ) : (
+        <View style={{flex: 1}}>
+          <FlatList
+            contentContainerStyle={{flexGrow: 1}}
+            ListEmptyComponent={() => <EmptyList />}
+            //data={data.filter(val => val.airing)}
+            ListFooterComponent={() => (
+              <View
+                style={{
+                  width: '95%',
+                  alignSelf: 'center',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 8,
+                  padding: 5,
+                }}>
+                {page?.current_page === 1 ? (
+                  <View
+                    style={{
+                      width: '30%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 5,
+                      padding: 5,
+                    }}
+                  />
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => HandlePrevious()}
+                    style={{
+                      width: '30%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: 'lightgreen',
+                      borderRadius: 5,
+                      padding: 5,
+                    }}>
+                    <Text>Previous</Text>
+                  </TouchableOpacity>
+                )}
+                <Text style={{fontWeight: 'bold'}}>{page?.current_page}</Text>
+                {page?.has_next_page && (
+                  <TouchableOpacity
+                    onPress={() => HandleNext()}
+                    style={{
+                      width: '30%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: 'lightgreen',
+                      borderRadius: 5,
+                      padding: 5,
+                    }}>
+                    <Text>Next</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+            data={data}
+            keyExtractor={item => item.mal_id}
+            renderItem={item => (
+              <AnimeCard navigation={navigation} item={item} />
+            )}
+          />
+        </View>
+      )}
     </View>
   );
 };

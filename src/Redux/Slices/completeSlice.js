@@ -6,12 +6,24 @@ import apiConfig from '../../api/apiConfig';
 export const getanime = createAsyncThunk('anime', async data => {
   //make api request to login with that username and password
   try {
-    console.log(JSON.stringify(data));
     //if Login , modify our state, and say that we are authenticated
     const response = await apiConfig.get(
       '/anime?page=' + data.page + '&limit=' + data.limit,
     );
+    //console.log(response.headers.access_token);
     if (response.status === 200) {
+      //console.log(JSON.stringify(response.data.data));
+      // Get the device token
+      /* await setAsyncStorage('token', response.headers.access_token);
+      await setAsyncStorage(
+        'x-working-company',
+        response.headers['x-working-company'],
+      );
+      await setAsyncStorage(
+        'x-working-branch',
+        response.headers['x-working-branch'],
+      );
+      await setAsyncStorage('x-user-role', response.headers['x-user-role']); */
       return {
         data: response.data.data,
         error: '',
@@ -22,25 +34,8 @@ export const getanime = createAsyncThunk('anime', async data => {
       return {data: undefined, error: response.statusText};
     }
   } catch (err) {
-    return {token: '', error: err.message};
-  }
-});
-
-export const getanimeDetails = createAsyncThunk('animeDetails', async id => {
-  //make api request to login with that username and password
-  try {
-    //if Login , modify our state, and say that we are authenticated
-    const response = await apiConfig.get('/anime/' + id);
-    if (response.status === 200) {
-      //console.log(JSON.stringify(response.data.data));
-      return {
-        details: response.data.data,
-        error: '',
-      };
-    } else {
-      return {data: undefined, error: response.statusText};
-    }
-  } catch (err) {
+    //if Login fails, then show error message
+    //console.log(err.message);
     return {token: '', error: err.message};
   }
 });
@@ -49,7 +44,6 @@ const initialState = {
   data: [],
   loading: false,
   filteredUsers: [],
-  details: {},
   error: '',
   pagination: {
     last_visible_page: 0,
@@ -63,8 +57,8 @@ const initialState = {
   },
 };
 
-export const airingReducer = createSlice({
-  name: 'airing',
+export const completeReducer = createSlice({
+  name: 'complete',
   initialState,
   reducers: {
     searchByName: (state, action) => {
@@ -75,8 +69,8 @@ export const airingReducer = createSlice({
         ...state,
         filteredUsers:
           action.payload.length > 0
-            ? filteredUsers.filter(val => val.status === 'Currently Airing')
-            : [...state.data.filter(val => val.status === 'Currently Airing')],
+            ? filteredUsers.filter(val => val.status === 'Finished Airing')
+            : [...state.data.filter(val => val.status === 'Finished Airing')],
       };
     },
   },
@@ -91,7 +85,7 @@ export const airingReducer = createSlice({
         state.error = '';
         state.data = action.payload.data;
         state.filteredUsers = action.payload.data.filter(
-          val => val.status === 'Currently Airing',
+          val => val.status === 'Finished Airing',
         );
         state.pagination = action.payload.page;
       }
@@ -107,29 +101,7 @@ export const airingReducer = createSlice({
       // Add user to the state array
       state.loading = false;
     });
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getanimeDetails.fulfilled, (state, action) => {
-      state.loading = false;
-      // Add user to the state array
-      if (action.payload.error) {
-        state.error = action.payload.error;
-      } else {
-        state.error = '';
-        state.details = action.payload.details;
-      }
-    });
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getanimeDetails.pending, state => {
-      // Add user to the state array
-      state.error = '';
-      state.loading = true;
-    });
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getanimeDetails.rejected, (state, action) => {
-      // Add user to the state array
-      state.loading = false;
-    });
   },
 });
-export const {searchByName} = airingReducer.actions;
-export default airingReducer.reducer;
+export const {searchByName} = completeReducer.actions;
+export default completeReducer.reducer;
